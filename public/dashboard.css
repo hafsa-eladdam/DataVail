@@ -1,0 +1,419 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-dark: #2A3056;       /* Bleu Nuit */
+    --bg-panel: #1e2340;      /* Fond des widgets */
+    --sidebar-bg: #15192e;    /* Fond du menu très sombre */
+    --primary: #67FFF2;       /* Cyan */
+    --secondary: #43B0AF;     /* Teal */
+    --text-white: #ffffff;
+    --text-muted: #aab;
+    --danger: #ff6b6b;
+    --success: #81EC86;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    overflow-x: hidden;
+}
+
+/* =========================================
+   LAYOUT GÉNÉRAL (GRID)
+   ========================================= */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================================
+   SIDEBAR "EDGE STYLE" (La partie importante)
+   ========================================= */
+.sidebar {
+    width: 80px; /* Largeur fermée (juste les icônes) */
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid rgba(255,255,255,0.05);
+    height: 100vh;
+    position: fixed; /* Reste fixe quand on scrolle */
+    top: 0; left: 0;
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Animation fluide */
+    z-index: 1000;
+    overflow: hidden; /* Cache le texte qui dépasse quand c'est fermé */
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+}
+
+/* L'effet d'ouverture au survol */
+.sidebar:hover {
+    width: 260px; /* Largeur ouverte */
+}
+
+/* Le Logo dans la sidebar */
+.sidebar-header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px; /* Aligné avec les icônes */
+    margin-bottom: 30px;
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
+}
+.sidebar-header img { width: 40px; height: 40px; min-width: 40px; }
+.sidebar-header h2 {
+    margin-left: 15px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    opacity: 0; /* Caché par défaut */
+    transition: opacity 0.3s;
+    transition-delay: 0.1s; /* Petit délai pour que ça fasse propre */
+}
+.sidebar:hover .sidebar-header h2 { opacity: 1; } /* Apparaît au survol */
+
+/* Les Liens du Menu */
+.nav-links {
+    list-style: none;
+    flex-grow: 1;
+}
+
+.nav-links li {
+    position: relative;
+    width: 100%;
+}
+
+.nav-links li a {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: 0.3s;
+    padding-left: 25px; /* Centre l'icône dans la barre fermée */
+}
+
+.nav-links li a:hover, .nav-links li a.active {
+    background: rgba(103, 255, 242, 0.1); /* Fond Cyan léger */
+    color: var(--primary);
+    border-left: 4px solid var(--primary); /* Petite barre active à gauche */
+    padding-left: 21px; /* Compenstion pour la bordure */
+}
+
+/* L'icône (toujours visible) */
+.nav-links li a svg {
+    width: 24px; height: 24px; min-width: 24px;
+    fill: currentColor;
+    transition: 0.3s;
+}
+
+/* Le Texte du lien (Caché par défaut) */
+.link-text {
+    margin-left: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.sidebar:hover .link-text { opacity: 1; transition-delay: 0.1s; }
+
+
+/* =========================================
+   CONTENU PRINCIPAL (MAIN CONTENT)
+   ========================================= */
+.main-content {
+    margin-left: 80px; /* Laisse la place pour la sidebar fermée */
+    flex-grow: 1;
+    padding: 30px;
+    transition: margin-left 0.4s; /* Si on voulait bouger le contenu */
+}
+
+/* Topbar (Barre du haut) */
+.topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 40px;
+}
+.user-info { display: flex; align-items: center; gap: 15px; }
+.user-avatar { width: 45px; height: 45px; background: var(--secondary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; }
+
+/* Widgets Stats (Cartes Graphiques CSS) */
+.stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px;
+}
+.stat-card {
+    background: var(--bg-panel); padding: 25px; border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden;
+}
+.stat-card h3 { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
+.stat-value { font-size: 2rem; font-weight: 700; color: #fff; }
+
+/* Barre de progression CSS pure */
+.progress-bar {
+    width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 15px; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 10px; }
+
+/* Modification pour éviter les erreurs de syntaxe Blade */
+/* AJOUT POUR RÉGLER L'ERREUR DE SYNTAXE */
+/* --- FIX FINAL POUR ERREUR SYNTAXE BLADE --- */
+.progress-fill {
+    /* On utilise des variables. Plus de propriété directe dans le HTML. */
+    width: var(--w, 0%);
+    background-color: var(--bg); 
+    transition: width 0.5s ease-in-out;
+}
+
+
+/* =========================================
+   PAGE CRÉATION RESSOURCE (Aperçu Live)
+   ========================================= */
+
+.resource-creation-container {
+    display: grid;
+    grid-template-columns: 350px 1fr; /* Colonne fixe pour l'aperçu, le reste pour le formulaire */
+    gap: 40px;
+    align-items: start;
+}
+
+/* --- Section Aperçu (Gauche) --- */
+.preview-section {
+    position: sticky;
+    top: 30px; /* Reste visible au scroll */
+}
+
+.preview-title {
+    color: var(--primary); /* Cyan */
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.resource-card-preview {
+    background: var(--bg-panel); /* Fond sombre des widgets */
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border: 1px solid rgba(103, 255, 242, 0.1); /* Bordure cyan subtile */
+}
+
+.card-image-container {
+    height: 200px;
+    background: #1a1f35; /* Fond légèrement plus clair pour l'image */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Style pour le cube par défaut si pas d'image */
+.card-image-container img.default-cube {
+    width: 64px;
+    height: 64px;
+    opacity: 0.5;
+}
+
+.card-details {
+    padding: 20px;
+}
+
+.card-category {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.card-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-specs {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    background: rgba(255,255,255,0.05);
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.card-specs svg {
+    margin-right: 8px;
+    fill: currentColor;
+}
+
+.card-specs span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+/* Variantes de Statut */
+.status-available { background: rgba(129, 236, 134, 0.15); color: var(--success); }
+.status-available .status-dot { background: var(--success); }
+
+.status-maintenance { background: rgba(241, 196, 15, 0.15); color: #f1c40f; }
+.status-maintenance .status-dot { background: #f1c40f; }
+
+.status-reserved { background: rgba(255, 107, 107, 0.15); color: var(--danger); }
+.status-reserved .status-dot { background: var(--danger); }
+
+
+/* --- Section Formulaire (Droite) --- */
+.form-section {
+    background: var(--bg-panel);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.form-header h2 {
+    font-size: 1.8rem;
+    color: var(--primary);
+}
+
+.close-btn {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.close-btn:hover { color: #fff; }
+.close-btn svg { margin-right: 5px; }
+
+.form-group { margin-bottom: 20px; }
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group.half { flex: 1; }
+
+.form-section label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.form-section input[type="text"],
+.form-section select,
+.form-section textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background: #15192e; /* Fond très sombre pour les inputs */
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-section input:focus,
+.form-section select:focus,
+.form-section textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+.form-section textarea { resize: vertical; }
+
+/* Style Input Fichier Custom */
+.file-input-container {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+}
+
+.file-input-container input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    width: 100%;
+    height: 100%;
+}
+
+.file-custom {
+    display: block;
+    padding: 12px 15px;
+    background: #15192e;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary); /* Le bouton Cyan */
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background: var(--secondary); /* Teal au survol */
+    transform: translateY(-2px);
+}
